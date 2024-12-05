@@ -4,6 +4,7 @@ use v5.40;
 use lib 'lib';
 
 use Component;
+use Component::Resistor;
 
 my $rows = [
     { id => 0, type => 0, data_a => 'Crystal oscillator', data_b => undef   },
@@ -14,4 +15,7 @@ my $rows = [
 
 my @inventory = Component->GetAll($rows);
 
-say $inventory[1]->description;
+say 'found ', scalar @inventory, ' components.';
+say 'component #2 is a ', $inventory[1]->description, '.';
+say 'found ', scalar Component::Resistor->GetAll($rows), ' resistors.';
+

@@ -29,8 +29,11 @@ sub GetAll ($class, $rows)
 # be passed to actually query a proper database.
 {
     my @components;
+    my @rows_filtered = $class eq 'Component'
+            ? @$rows
+            : grep { TYPES->{ $_->{type} } eq $class } @$rows;
 
-    for my $row (@$rows) {
+    for my $row (@rows_filtered) {
         die "Unknown component type.\n"
             unless exists TYPES->{ $row->{type} };
 
