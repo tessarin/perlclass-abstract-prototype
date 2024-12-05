@@ -1,10 +1,6 @@
 use v5.40;
 use experimental 'class';
 
-use Component::Generic;
-use Component::Resistor;
-use Component::Capacitor;
-
 class Component; # :abstract;
 
 use constant DB_TABLE => 'components';
@@ -39,9 +35,23 @@ sub GetAll ($class, $rows)
             unless exists TYPES->{ $row->{type} };
 
         my $class = TYPES->{ $row->{type} };
+        _load_class($class);
         my $obj = $class->new;
         $obj->populate($row);
 
         push @components, $obj;
+    }
+
+    @components;
+}
+
+sub _load_class ($class)
+{
+    try {
+        my $file = $class;
+        $file =~ s|::|/|g;
+        require "$file.pm";
+    } catch ($e) {
+        die "Could not load `$class`: $e\n";
     }
 }
